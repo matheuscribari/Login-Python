@@ -1,0 +1,50 @@
+import re
+import customtkinter
+
+customtkinter.set_appearance_mode("dark")
+customtkinter.set_default_color_theme("dark-blue")
+
+def validar_credenciais(email, senha):
+    with open('senhas.txt', 'r') as file:
+        credenciais = [linha.strip().split(',') for linha in file.readlines()]
+
+    return any(email == email_armazenado and senha == senha_armazenada for email_armazenado, senha_armazenada in credenciais)
+
+def clique():
+    email_digitado = email.get()
+    senha_digitada = senha.get()
+
+    if not email_digitado or not senha_digitada:
+        customtkinter.messagebox.showerror("Erro", "Por favor, digite um email e senha.")
+        return
+    
+    if validar_credenciais(email_digitado, senha_digitada):
+        customtkinter.messagebox.showinfo("Sucesso", "Acesso concedido!")
+    else:
+        customtkinter.messagebox.showerror("Erro", "Credenciais inválidas. Acesso negado.")
+
+def abrir_janela():
+    janela = customtkinter.CTk()
+    janela.geometry("600x400")
+    janela.resizable(False, False)
+
+    texto = customtkinter.CTkLabel(janela, text="Fazer Login")
+    texto.pack(padx=10, pady=10)
+
+    global email
+    email = customtkinter.CTkEntry(janela, placeholder_text="Seu e-mail")
+    email.pack(padx=10, pady=10)
+
+    global senha
+    senha = customtkinter.CTkEntry(janela, placeholder_text="Sua Senha", show="*")
+    senha.pack(padx=10, pady=10)
+
+    botao = customtkinter.CTkButton(janela, text="Login", command=clique)
+    botao.pack(padx=10, pady=10)
+
+    checkbox = customtkinter.CTkCheckBox(janela, text="Lembrar Login")
+    checkbox.pack(padx=10, pady=10)
+
+    janela.mainloop()
+
+abrir_janela()
